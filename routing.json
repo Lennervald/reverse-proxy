@@ -1,8 +1,12 @@
 {
-  "datafreaksimalmo.se": 4001,
-  "www.datafreaksimalmo.se": {
-    "redirect": "datafreaksimalmo.se"
+  "lennervald.com": 4001,
+  "www.lennervald.com": {
+    "redirect": "lennervald.com"
   },
-  "cooling.datafreaksimalmo.se": 3000,
-  "datafreaksimalmo.se/cooling": 3000
+  "lennervald.se": {
+    "redirect": "lennervald.com"
+  },
+  "www.lennervald.se": {
+    "redirect": "lennervald.com"
+  }
 }
