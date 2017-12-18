@@ -1,8 +1,8 @@
 {
-  "lennervald.com": 4001,
-  "www.lennervald.com": {
-    "redirect": "lennervald.com"
+  "lennervald.se": 4001,
+  "www.lennervald.se": {
+    "redirect": "lennervald.se"
   },
-  "news.lennervald.com": 3000,
-  "lennervald.com/news": 3000
+  "nyheter.lennervald.se": 3000,
+  "lennervald.se/nyheter": 3000
 }
