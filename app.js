@@ -1,6 +1,6 @@
 // Requires
 const http = require('http');
-// ** const https = require('https');
+const https = require('https');
 const httpProxy = require('http-proxy');
 const tls = require('tls');
 const fs = require('fs');
@@ -8,10 +8,14 @@ const path = require('path');
 const exec = require('child_process').exec;
 
 // Read our routes
-// ** const routes = require('./routing.json');
+// **
+const routes = require('./routing.json');
+// --
 
 // Read all certs from certbot into an object
-// let certs = readCerts('/etc/letsencrypt/live');
+// **
+let certs = readCerts('/etc/letsencrypt/live');
+// --
 
 // Create a new reverse proxy
 const proxy = httpProxy.createProxyServer();
@@ -43,59 +47,62 @@ http.createServer((req, res) => {
     }
 }).listen(80);
 
-// ** Create a new secure webserver
-// https.createServer({
-//     // SNICallback let's us get the correct cert
-//     // depening on what the domain the user asks for
-//     SNICallback: (domain, callback) => callback(
-//         certs[domain] ? null : new Error('No such cert'),
-//         certs[domain] ? certs[domain].secureContext : null
-//     ),
-//     // But we still have the server with a "default" cert
-//     key: certs['your-domain.com'].key,
-//     cert: certs['your-domain.com'].cert,
-// }, (req, res) => {
-//     // Set/replace response headers
-//     setResponseHeaders(req, res);
-//
-//     // Routing
-//     let host = req.headers.host;
-//     let url = req.url;
-//     let portToUse;
-//
-//     url += (url.substr(-1) != '/' ? '/' : '');
-//
-//     for (let route in routes) {
-//         let port = routes[route];
-//         if (route.includes('/')) {
-//             route += (route.substr(-1) != '/' ? '/' : '');
-//         }
-//         if (route == host) {
-//             portToUse = port;
-//         } else if (url != '/' && (host + url).indexOf(route) == 0) {
-//             portToUse = port;
-//         }
-//     }
-//
-//     // Redirects
-//     if (portToUse && portToUse.redirect) {
-//       let url = 'https://' + portToUse.redirect;
-//       res.writeHead(301, {
-//           'Location': url,
-//       });
-//       res.end();
-//     }
-//
-//     // Serve the correct app for a domain
-//     else if (portToUse) {
-//         proxy.web(req, res, {
-//             target: 'http://127.0.0.1:' + portToUse,
-//         });
-//     } else {
-//         res.statusCode = 404;
-//         res.end('No such url!');
-//     }
-// }).listen(443);
+
+// Create a new secure webserver
+// **
+https.createServer({
+    // SNICallback let's us get the correct cert
+    // depening on what the domain the user asks for
+    SNICallback: (domain, callback) => callback(
+        certs[domain] ? null : new Error('No such cert'),
+        certs[domain] ? certs[domain].secureContext : null
+    ),
+    // But we still have the server with a "default" cert
+    key: certs['your-domain.com'].key,
+    cert: certs['your-domain.com'].cert,
+}, (req, res) => {
+    // Set/replace response headers
+    setResponseHeaders(req, res);
+
+    // Routing
+    let host = req.headers.host;
+    let url = req.url;
+    let portToUse;
+
+    url += (url.substr(-1) != '/' ? '/' : '');
+
+    for (let route in routes) {
+        let port = routes[route];
+        if (route.includes('/')) {
+            route += (route.substr(-1) != '/' ? '/' : '');
+        }
+        if (route == host) {
+            portToUse = port;
+        } else if (url != '/' && (host + url).indexOf(route) == 0) {
+            portToUse = port;
+        }
+    }
+
+    // Redirects
+    if (portToUse && portToUse.redirect) {
+      let url = 'https://' + portToUse.redirect;
+      res.writeHead(301, {
+          'Location': url,
+      });
+      res.end();
+    }
+
+    // Serve the correct app for a domain
+    else if (portToUse) {
+        proxy.web(req, res, {
+            target: 'http://127.0.0.1:' + portToUse,
+        });
+    } else {
+        res.statusCode = 404;
+        res.end('No such url!');
+    }
+}).listen(443);
+// --
 
 
 function setResponseHeaders(req, res) {
@@ -146,6 +153,8 @@ function renewCerts() {
 }
 
 // Renew certs if needed on start
-// ** renewCerts();
+// **
+renewCerts();
+// --
 // and then once every day
 setInterval(renewCerts, 1000 * 60 * 60 * 24);
