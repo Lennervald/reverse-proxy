@@ -58,8 +58,8 @@ http.createServer((req, res) => {
         certs[domain] ? certs[domain].secureContext : null
     ),
     // But we still have the server with a "default" cert
-    key: certs['lennervald.com'].key,
-    cert: certs['lennervald.com'].cert,
+    key: certs['lennervald.se'].key,
+    cert: certs['lennervald.se'].cert,
 }, (req, res) => {
     // Set/replace response headers
     setResponseHeaders(req, res);
@@ -114,7 +114,7 @@ function setResponseHeaders(req, res) {
     // and then replace it with our function
     res.writeHead = function(statusCode, headers) {
         // set/replace our own headers
-        res.setHeader('x-powered-by', 'Thomas supercoola server');
+        res.setHeader('x-powered-by', 'Martins server');
 
         // security related
         res.setHeader('strict-transport-security','max-age=31536000; includeSubDomains; preload');
