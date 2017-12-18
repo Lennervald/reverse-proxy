@@ -61,6 +61,14 @@ https.createServer({
     key: certs['lennervald.se'].key,
     cert: certs['lennervald.se'].cert,
 }, (req, res) => {
+
+    // Block unecessary request mehtods. Add to this list
+    if(req.method == 'TRACE'){
+      res.status(403);
+      res.end();
+      return;
+    }
+
     // Set/replace response headers
     setResponseHeaders(req, res);
 
