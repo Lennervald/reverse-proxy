@@ -9,12 +9,12 @@ const exec = require('child_process').exec;
 
 // Read our routes
 // **
-//const routes = require('./routing.json');
+const routes = require('./routing.json');
 // --
 
 // Read all certs from certbot into an object
 // **
-//let certs = readCerts('/etc/letsencrypt/live');
+let certs = readCerts('/etc/letsencrypt/live');
 // --
 
 // Create a new reverse proxy
@@ -50,7 +50,7 @@ http.createServer((req, res) => {
 
 // Create a new secure webserver
 // **
-/* https.createServer({
+https.createServer({
     // SNICallback let's us get the correct cert
     // depening on what the domain the user asks for
     SNICallback: (domain, callback) => callback(
@@ -101,7 +101,7 @@ http.createServer((req, res) => {
         res.statusCode = 404;
         res.end('No such url!');
     }
-}).listen(443); */
+}).listen(443);
 // --
 
 
@@ -154,7 +154,7 @@ function renewCerts() {
 
 // Renew certs if needed on start
 // **
-// renewCerts();
+renewCerts();
 // --
 // and then once every day
 setInterval(renewCerts, 1000 * 60 * 60 * 24);
