@@ -15,6 +15,7 @@ const routes = require('./routing.json');
 // Read all certs from certbot into an object
 // **
 let certs = readCerts('/etc/letsencrypt/live');
+console.log('certs: ',certs);
 // --
 
 // Create a new reverse proxy
@@ -94,6 +95,7 @@ https.createServer({
     // Redirects
     if (portToUse && portToUse.redirect) {
       let url = 'https://' + portToUse.redirect;
+      console.log('url: ', url);
       res.writeHead(301, {
           'Location': url,
       });
