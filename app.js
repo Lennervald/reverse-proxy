@@ -1,4 +1,4 @@
-// Requires
+ // Requires
 const http = require('http');
 const https = require('https');
 const httpProxy = require('http-proxy');
@@ -15,7 +15,7 @@ const routes = require('./routing.json');
 // Read all certs from certbot into an object
 // **
 let certs = readCerts('/etc/letsencrypt/live');
-console.log('certs: ',certs);
+console.log('certs: ', certs);
 // --
 
 // Create a new reverse proxy
@@ -62,9 +62,8 @@ https.createServer({
     key: certs['lennervald.se'].key,
     cert: certs['lennervald.se'].cert,
 }, (req, res) => {
-
     // Block unecessary request mehtods. Add to this list
-    if(req.method == 'TRACE'){
+    if (req.method == 'TRACE') {
       res.status(403);
       res.end();
       return;
@@ -127,11 +126,11 @@ function setResponseHeaders(req, res) {
         res.setHeader('x-powered-by', 'Martins server');
 
         // security related
-        res.setHeader('strict-transport-security','max-age=31536000; includeSubDomains; preload');
+        res.setHeader('strict-transport-security', 'max-age=31536000; includeSubDomains; preload');
         res.setHeader('x-frame-options', 'SAMEORIGIN');
         res.setHeader('x-xss-protection', '1');
         res.setHeader('x-content-type-options', 'nosniff');
-        res.setHeader('content-security-policy','default-src * \'unsafe-inline\' \'unsafe-eval\'');
+        res.setHeader('content-security-policy', 'default-src * \'unsafe-inline\' \'unsafe-eval\'');
 
         // call the original write head function as well
         res.oldWriteHead(statusCode, headers);
